@@ -9,13 +9,16 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "vocal-api": "*",
+    "@tanstack/react-query": "^4.29.5",
+    "@trpc/client": "^10.23.0",
+    "@trpc/react-query": "^10.23.0",
     "@types/react": "~18.0.27",
     "expo": "~48.0.15",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
     "react-native": "0.71.7",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "vocal-api": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
