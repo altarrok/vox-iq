@@ -1,0 +1,9 @@
+{
+    "private": true,
+    "name": "vox-iq",
+    "version": "1.0.0",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ]
+}
