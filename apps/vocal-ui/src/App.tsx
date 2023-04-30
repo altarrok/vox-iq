@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { trpc } from './utils/trpc';
 import { ChatButton } from './components/ChatButton';
+import { Sen } from './components/Sen';
 
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -12,11 +13,12 @@ export default function App() {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "http://192.168.1.70:8000/trpc",
+          url: "http://192.168.1.22:8000/trpc",
         }),
       ],
     }),
   );
+
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
@@ -25,6 +27,7 @@ export default function App() {
           <Text>Open up App.js to start working on your app!</Text>
           <StatusBar style="auto" />
           {/* <ChatButton /> */}
+            <Sen></Sen>
         </View>
       </QueryClientProvider>
     </trpc.Provider >

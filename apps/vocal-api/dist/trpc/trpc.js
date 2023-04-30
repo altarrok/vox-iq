@@ -14,7 +14,7 @@ const configuration = new openai_1.Configuration({
 const openai = new openai_1.OpenAIApi(configuration);
 // created for each request
 const createContext = ({ req, res, }) => ({
-    openai
+    openai,
 });
 exports.createContext = createContext;
 exports.t = server_1.initTRPC.context().create();

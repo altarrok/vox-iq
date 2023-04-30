@@ -8,25 +8,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChatRouter = void 0;
+exports.TranscribeRouter = void 0;
+const zod_1 = require("zod");
 const trpc_1 = require("../trpc");
-exports.ChatRouter = trpc_1.t.router({
-    chatCompletion: trpc_1.t.procedure
+const fs_1 = __importDefault(require("fs"));
+const tmp_promise_1 = __importDefault(require("tmp-promise"));
+exports.TranscribeRouter = trpc_1.t.router({
+    transcribe: trpc_1.t.procedure
+        .input(zod_1.z.object({
+        recording: zod_1.z.string(),
+        format: zod_1.z.enum(["mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm"])
+    }))
         .mutation(({ input, ctx }) => __awaiter(void 0, void 0, void 0, function* () {
+        const { path, cleanup } = yield tmp_promise_1.default.file({ mode: 0o644, postfix: '.' + input.format });
         try {
-            const chatCompletion = yield ctx.openai.createChatCompletion({
-                model: "gpt-3.5-turbo",
-                max_tokens: 100,
-                messages: [
-                    { "role": "system", "content": "You are a voice assistant, give short and precise answers" },
-                    { "role": "user", "content": "Hello!" },
-                    { "role": "assistant", "content": "Hello there! How may I assist you today?" },
-                    { "role": "user", "content": "Can you give me a description of Internet?" },
-                    { "role": "assistant", "content": "The internet is a global network of interconnected computers and servers that communicate with each other using standardized communication protocols. It allows people to connect, communicate, and share information and resources across geographical and cultural boundaries." }
-                ]
-            });
-            return chatCompletion.data.choices[0].message;
+            yield fs_1.default.promises.writeFile(path, Buffer.from(input.recording, "base64"));
+            const chatCompletion = yield ctx.openai.createTranscription(
+            // @ts-ignore
+            fs_1.default.createReadStream(path), "whisper-1");
+            return chatCompletion.data.text;
         }
         catch (error) {
             if (error.response) {
@@ -36,6 +40,9 @@ exports.ChatRouter = trpc_1.t.router({
             else {
                 console.error(error.message);
             }
+        }
+        finally {
+            yield cleanup();
         }
     }))
 });
