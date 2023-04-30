@@ -1,20 +1,29 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
-export declare const createContext: ({ req, res, }: trpcExpress.CreateExpressContextOptions) => {};
+import { OpenAIApi } from "openai";
+export declare const createContext: ({ req, res, }: trpcExpress.CreateExpressContextOptions) => {
+    openai: OpenAIApi;
+};
 export declare const t: {
     _config: import("@trpc/server").RootConfig<{
-        ctx: {};
+        ctx: {
+            openai: OpenAIApi;
+        };
         meta: object;
         errorShape: import("@trpc/server").DefaultErrorShape;
         transformer: import("@trpc/server").DefaultDataTransformer;
     }>;
     procedure: import("@trpc/server").ProcedureBuilder<{
         _config: import("@trpc/server").RootConfig<{
-            ctx: {};
+            ctx: {
+                openai: OpenAIApi;
+            };
             meta: object;
             errorShape: import("@trpc/server").DefaultErrorShape;
             transformer: import("@trpc/server").DefaultDataTransformer;
         }>;
-        _ctx_out: {};
+        _ctx_out: {
+            openai: OpenAIApi;
+        };
         _input_in: typeof import("@trpc/server").unsetMarker;
         _input_out: typeof import("@trpc/server").unsetMarker;
         _output_in: typeof import("@trpc/server").unsetMarker;
@@ -23,12 +32,16 @@ export declare const t: {
     }>;
     middleware: <TNewParams extends import("@trpc/server").ProcedureParams<import("@trpc/server").AnyRootConfig, unknown, unknown, unknown, unknown, unknown, unknown>>(fn: import("@trpc/server").MiddlewareFunction<{
         _config: import("@trpc/server").RootConfig<{
-            ctx: {};
+            ctx: {
+                openai: OpenAIApi;
+            };
             meta: object;
             errorShape: import("@trpc/server").DefaultErrorShape;
             transformer: import("@trpc/server").DefaultDataTransformer;
         }>;
-        _ctx_out: {};
+        _ctx_out: {
+            openai: OpenAIApi;
+        };
         _input_out: unknown;
         _input_in: unknown;
         _output_in: unknown;
@@ -36,12 +49,16 @@ export declare const t: {
         _meta: object;
     }, TNewParams>) => import("@trpc/server").MiddlewareBuilder<{
         _config: import("@trpc/server").RootConfig<{
-            ctx: {};
+            ctx: {
+                openai: OpenAIApi;
+            };
             meta: object;
             errorShape: import("@trpc/server").DefaultErrorShape;
             transformer: import("@trpc/server").DefaultDataTransformer;
         }>;
-        _ctx_out: {};
+        _ctx_out: {
+            openai: OpenAIApi;
+        };
         _input_out: unknown;
         _input_in: unknown;
         _output_in: unknown;
@@ -49,7 +66,9 @@ export declare const t: {
         _meta: object;
     }, TNewParams>;
     router: <TProcRouterRecord extends import("@trpc/server").ProcedureRouterRecord>(procedures: TProcRouterRecord) => import("@trpc/server").CreateRouterInner<import("@trpc/server").RootConfig<{
-        ctx: {};
+        ctx: {
+            openai: OpenAIApi;
+        };
         meta: object;
         errorShape: import("@trpc/server").DefaultErrorShape;
         transformer: import("@trpc/server").DefaultDataTransformer;
