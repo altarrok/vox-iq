@@ -1,32 +1,37 @@
 export declare const appRouter: import("@trpc/server").CreateRouterInner<import("@trpc/server").RootConfig<{
-    ctx: {};
+    ctx: {
+        openai: import("openai").OpenAIApi;
+    };
     meta: object;
     errorShape: import("@trpc/server").DefaultErrorShape;
     transformer: import("@trpc/server").DefaultDataTransformer;
 }>, {
-    user: import("@trpc/server").CreateRouterInner<import("@trpc/server").RootConfig<{
-        ctx: {};
+    chat: import("@trpc/server").CreateRouterInner<import("@trpc/server").RootConfig<{
+        ctx: {
+            openai: import("openai").OpenAIApi;
+        };
         meta: object;
         errorShape: import("@trpc/server").DefaultErrorShape;
         transformer: import("@trpc/server").DefaultDataTransformer;
     }>, {
-        getUser: import("@trpc/server").BuildProcedure<"query", {
+        chatCompletion: import("@trpc/server").BuildProcedure<"query", {
             _config: import("@trpc/server").RootConfig<{
-                ctx: {};
+                ctx: {
+                    openai: import("openai").OpenAIApi;
+                };
                 meta: object;
                 errorShape: import("@trpc/server").DefaultErrorShape;
                 transformer: import("@trpc/server").DefaultDataTransformer;
             }>;
-            _meta: object;
-            _ctx_out: {};
-            _input_in: string;
-            _input_out: string;
+            _ctx_out: {
+                openai: import("openai").OpenAIApi;
+            };
+            _input_in: typeof import("@trpc/server").unsetMarker;
+            _input_out: typeof import("@trpc/server").unsetMarker;
             _output_in: typeof import("@trpc/server").unsetMarker;
             _output_out: typeof import("@trpc/server").unsetMarker;
-        }, {
-            id: string;
-            name: string;
-        }>;
+            _meta: object;
+        }, import("openai").ChatCompletionResponseMessage | undefined>;
     }>;
 }>;
 export type AppRouter = typeof appRouter;

@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
-
+import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { trpc } from './utils/trpc';
+import { ChatButton } from './components/ChatButton';
 
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -11,7 +12,7 @@ export default function App() {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: 'http://localhost:8000/trpc',
+          url: "http://192.168.1.70:8000/trpc",
         }),
       ],
     }),
@@ -23,6 +24,7 @@ export default function App() {
         <View style={styles.container}>
           <Text>Open up App.js to start working on your app!</Text>
           <StatusBar style="auto" />
+          <ChatButton />
         </View>
       </QueryClientProvider>
     </trpc.Provider >
@@ -37,7 +39,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-function useState(arg0: () => any): [any] {
-  throw new Error('Function not implemented.');
-}
 
