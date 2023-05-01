@@ -28,7 +28,7 @@ exports.TranscribeRouter = trpc_1.t.router({
         try {
             yield fs_1.default.promises.writeFile(path, Buffer.from(input.recording, "base64"));
             const chatCompletion = yield ctx.openai.createTranscription(
-            // @ts-ignore
+            // @ts-ignore https://github.com/openai/openai-node/issues/127
             fs_1.default.createReadStream(path), "whisper-1");
             return chatCompletion.data.text;
         }

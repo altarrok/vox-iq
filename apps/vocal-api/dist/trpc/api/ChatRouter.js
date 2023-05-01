@@ -10,21 +10,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatRouter = void 0;
+const zod_1 = require("zod");
 const trpc_1 = require("../trpc");
 exports.ChatRouter = trpc_1.t.router({
     chatCompletion: trpc_1.t.procedure
+        .input(zod_1.z.object({
+        messages: zod_1.z.object({
+            role: zod_1.z.enum(["user", "system", "assistant"]),
+            content: zod_1.z.string(),
+        }).array()
+    }))
         .mutation(({ input, ctx }) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const chatCompletion = yield ctx.openai.createChatCompletion({
                 model: "gpt-3.5-turbo",
                 max_tokens: 100,
-                messages: [
-                    { "role": "system", "content": "You are a voice assistant, give short and precise answers" },
-                    { "role": "user", "content": "Hello!" },
-                    { "role": "assistant", "content": "Hello there! How may I assist you today?" },
-                    { "role": "user", "content": "Can you give me a description of Internet?" },
-                    { "role": "assistant", "content": "The internet is a global network of interconnected computers and servers that communicate with each other using standardized communication protocols. It allows people to connect, communicate, and share information and resources across geographical and cultural boundaries." }
-                ]
+                messages: input.messages
             });
             return chatCompletion.data.choices[0].message;
         }

@@ -3,9 +3,6 @@ import { t } from "../trpc";
 import fs from 'fs';
 import tmp from 'tmp-promise';
 
-
-
-
 export const TranscribeRouter = t.router({
     transcribe: t.procedure
         .input(z.object({
@@ -17,7 +14,7 @@ export const TranscribeRouter = t.router({
             try {
                 await fs.promises.writeFile(path, Buffer.from(input.recording, "base64"))
                 const chatCompletion = await ctx.openai.createTranscription(
-                    // @ts-ignore
+                    // @ts-ignore https://github.com/openai/openai-node/issues/127
                     fs.createReadStream(path),
                     "whisper-1",
                 )
