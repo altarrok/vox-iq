@@ -1,7 +1,7 @@
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import type { AppRouterOutput } from 'vocal-api';
 
-type TMessage = NonNullable<AppRouterOutput['chat']['chatCompletion']>
+export type TMessage = NonNullable<AppRouterOutput['chat']['chatCompletion']>
 
 interface IChatContext {
     messages: TMessage[]

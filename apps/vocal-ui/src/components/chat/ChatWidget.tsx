@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useChatContext } from "./ChatContext";
-import { Text } from 'react-native';
+import { StyleSheet, ScrollView, Text } from 'react-native';
 import { trpc } from "../../utils/trpc";
+import { ChatBox } from "./ChatBox";
 
 export const ChatWidget: React.FC = () => {
     const { messages, addMessage } = useChatContext();
@@ -22,8 +23,8 @@ export const ChatWidget: React.FC = () => {
     }, [messages])
 
     return (
-        <>
-            {messages.map((message, i) => (message.role !== "system") ? <Text key={i}>{message.role}: {message.content}</Text> : <></>)}
-        </>
+        <ChatBox
+            messages={messages}
+        />
     );
 }
