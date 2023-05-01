@@ -1,1 +1,1 @@
-export { AppRouter } from './trpc/AppRouter';
+export { AppRouter, AppRouterInput, AppRouterOutput } from './trpc/AppRouter';
