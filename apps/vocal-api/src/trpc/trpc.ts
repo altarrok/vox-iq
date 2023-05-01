@@ -3,6 +3,7 @@ import * as trpcExpress from '@trpc/server/adapters/express';
 import { Configuration, OpenAIApi } from "openai";
 import dotenv from 'dotenv';
 
+
 dotenv.config();
 
 const configuration = new Configuration({
@@ -16,7 +17,7 @@ export const createContext = ({
     req,
     res,
   }: trpcExpress.CreateExpressContextOptions) => ({
-    openai
+    openai,
   });
   type Context = inferAsyncReturnType<typeof createContext>;
   

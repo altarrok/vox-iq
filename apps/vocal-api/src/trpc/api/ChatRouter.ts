@@ -3,7 +3,7 @@ import { t } from "../trpc";
 
 export const ChatRouter = t.router({
     chatCompletion: t.procedure
-        .query(async ({ input, ctx }) => {
+        .mutation(async ({ input, ctx }) => {
             try {
                 const chatCompletion = await ctx.openai.createChatCompletion({
                     model: "gpt-3.5-turbo",
