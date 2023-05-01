@@ -4,6 +4,9 @@ import { useChatContext } from "./chat/ChatContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
 import { Audio } from "expo-av";
+import * as FileSystem from "expo-file-system";
+
+
 
 export const ChatButton: React.FC = () => {
   const [recording, setRecording] = useState(null);
@@ -69,7 +72,6 @@ export const ChatButton: React.FC = () => {
       if (recordingStatus === "recording") {
         await recording.stopAndUnloadAsync();
         
-
         const blobToBase64 = (blob:any) => {
           const reader = new FileReader();
           reader.readAsDataURL(blob);
