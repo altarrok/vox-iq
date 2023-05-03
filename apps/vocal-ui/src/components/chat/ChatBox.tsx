@@ -6,7 +6,7 @@ import { TMessage } from "./ChatContext";
 export const ChatBox: React.FC<{ messages: TMessage[] }> = ({ messages }) => {
     const scrollViewRef = useRef<ScrollView>(null);
     const [isAtBottom, setIsAtBottom] = useState(true);
-    
+
     return (
         <ScrollView
             style={style.scrollView}
@@ -32,9 +32,9 @@ export const ChatBox: React.FC<{ messages: TMessage[] }> = ({ messages }) => {
                             </View>
                         ) : (
                             <LinearGradient
-                                colors={["rgba(131,58,180,1)", "rgba(0,121,191,1)", "rgba(172,0,0,1)"]}
+                                colors={["rgba(70,40,96,1)", "rgba(48,11,154,1)"]}
                                 start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
+                                end={{ x: 1, y: 1 }}
                                 style={[style.aiBubble, style.linearGradient]}
                             >
                                 <Text style={style.bubbleText}>
