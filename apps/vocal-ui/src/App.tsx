@@ -1,11 +1,14 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { useState } from 'react';
-import { Platform, SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { trpc } from './utils/trpc';
 import { ChatContextProvider } from './components/chat/ChatContext';
 import { ChatWidget } from './components/chat/ChatWidget';
 import { ChatButton } from './components/ChatButton';
+import { StatusBar } from 'expo-status-bar';
+import Constants from "expo-constants";
+
 
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -19,7 +22,7 @@ export default function App() {
     }),
   );
 
-  const statusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
+  const statusBarHeight = Platform.OS === 'android' ? Constants.statusBarHeight : 0;
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
@@ -27,7 +30,7 @@ export default function App() {
         <ChatContextProvider>
           <SafeAreaView style={[styles.container, { paddingTop: statusBarHeight }]}>
             <View style={styles.innerContainer}>
-              <StatusBar barStyle="light-content" />
+              <StatusBar style="light" translucent backgroundColor="transparent" />
               <ChatWidget />
               <ChatButton />
             </View>
@@ -50,3 +53,4 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
 });
+
