@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useChatContext } from "./ChatContext";
-import { StyleSheet, ScrollView, Text } from 'react-native';
 import { trpc } from "../../utils/trpc";
 import { ChatBox } from "./ChatBox";
 
