@@ -1,14 +1,20 @@
-import { Button } from "react-native";
 import { trpc } from "../utils/trpc";
 import { useChatContext } from "./chat/ChatContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
 import { Audio } from "expo-av";
+import {MotiView} from '@motify/components'
+import {Easing} from 'react-native-reanimated'
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+
 
 export const ChatButton: React.FC = () => {
-  const [recording, setRecording] = useState(null);
+  const [recording, setRecording] = useState<Audio.Recording>();
   const [recordingStatus, setRecordingStatus] = useState("idle");
   const [audioPermission, setAudioPermission] = useState(false);
+  const [animate, setAnimate] = useState(false);
+
+
 
   const { addMessage } = useChatContext();
   const transcribeMutation = trpc.transcribe.transcribe.useMutation({
@@ -56,9 +62,9 @@ export const ChatButton: React.FC = () => {
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
       await newRecording.startAsync();
-      console.log(newRecording);
       setRecording(newRecording);
       setRecordingStatus("recording");
+      setAnimate(true);
     } catch (err) {
       console.error(err);
     }
@@ -67,10 +73,10 @@ export const ChatButton: React.FC = () => {
   async function stopRecording() {
     try {
       if (recordingStatus === "recording") {
-        await recording.stopAndUnloadAsync();
-        
 
-        const blobToBase64 = (blob:any) => {
+        await recording!.stopAndUnloadAsync();
+
+        const blobToBase64 = (blob: any) => {
           const reader = new FileReader();
           reader.readAsDataURL(blob);
           return new Promise((resolve) => {
@@ -82,7 +88,8 @@ export const ChatButton: React.FC = () => {
 
         // Fetch audio binary blob data
 
-        const audioURI = recording.getURI();
+        const audioURI = recording!.getURI();
+        if (audioURI === null) throw new Error("Audio URI is null");
         const blob = await new Promise((resolve, reject) => {
           const xhr = new XMLHttpRequest();
           xhr.onload = function () {
@@ -96,12 +103,12 @@ export const ChatButton: React.FC = () => {
           xhr.send(null);
         });
 
-        const audioBase64Data = await blobToBase64(blob) as string;
+        const audioBase64Data = (await blobToBase64(blob)) as string;
         const audioBase64 = audioBase64Data.split(",")[1];
-        transcribeMutation.mutate({recording: audioBase64, format: "m4a"})
-        console.log(audioBase64);
+        transcribeMutation.mutate({ recording: audioBase64, format: "m4a" });
         setRecordingStatus("idle");
-        setRecording(null);
+        setRecording(undefined);
+        setAnimate(false);
       }
     } catch (err) {
       console.error(err);
@@ -109,14 +116,58 @@ export const ChatButton: React.FC = () => {
   }
 
   return (
-    <FontAwesome.Button
-      name={recordingStatus === "idle" ? "microphone" : "microphone-slash"}
-      size={64}
-      onPress={() =>
-        recordingStatus === "idle" ? startRecording() : stopRecording()
-      }
-    >
-      Talk AMK
-    </FontAwesome.Button>
+    <TouchableOpacity>
+      <View style={[styles.dot, styles.center]}>
+        {animate && [...Array(2).keys()].map((i) => {
+            return (
+                <MotiView
+                from={{opacity:1, scale:1}}
+                animate={{opacity:0, scale:2}}
+                key={i}
+                style={[
+                    StyleSheet.absoluteFillObject,
+                    styles.dot,
+                ]}
+                transition={{
+                    type: "timing",
+                    duration: 2000,
+                    easing: Easing.out(Easing.ease),
+                    loop: true,
+                    delay: i * 500,
+                    repeatReverse: false,
+                }}
+                />
+            );
+            })
+        }
+        <FontAwesome
+          name={recordingStatus === "idle" ? "microphone" : "microphone-slash"}
+          size={45}
+          color="white"
+          onPress={() =>
+            recordingStatus === "idle" ? startRecording() : stopRecording()
+          }
+        >
+          {/* <Text >Talk AMK</Text> */}
+        </FontAwesome>
+      </View>
+    </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+    talkButton: {
+        backgroundColor: "red",
+    },
+    dot: {
+        width: 80,
+        height: 80,
+        borderRadius: 80,
+        backgroundColor: "black",
+    },
+    center: {
+        alignItems: "center",
+        justifyContent: "center",
+    }
+
+})
