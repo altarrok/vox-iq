@@ -13,7 +13,7 @@ export const ChatRouter = t.router({
             try {
                 const chatCompletion = await ctx.openai.createChatCompletion({
                     model: "gpt-3.5-turbo",
-                    max_tokens: 100,
+                    max_tokens: 1000,
                     messages: input.messages
                 })
 

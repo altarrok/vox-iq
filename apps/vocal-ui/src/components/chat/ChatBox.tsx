@@ -2,8 +2,9 @@ import { useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { TMessage } from "./ChatContext";
+import { ActivityIndicator } from 'react-native';
 
-export const ChatBox: React.FC<{ messages: TMessage[] }> = ({ messages }) => {
+export const ChatBox: React.FC<{ messages: TMessage[], aiLoadingMessage: boolean }> = ({ messages, aiLoadingMessage }) => {
     const scrollViewRef = useRef<ScrollView>(null);
     const [isAtBottom, setIsAtBottom] = useState(true);
 
@@ -22,10 +23,15 @@ export const ChatBox: React.FC<{ messages: TMessage[] }> = ({ messages }) => {
         >
             {messages.map((message, i) => (
                 message.role !== "system" ? (
-                    <View key={i} style={message.role === "user" ? style.userBubbleContainer : style.aiBubbleContainer}>
+                    <View
+                        key={i}
+                        style={message.role === "user" ?
+                            [style.bubbleContainer, style.userBubbleContainer] :
+                            [style.bubbleContainer, style.aiBubbleContainer]}
+                    >
                         {message.role === "assistant" && <Text style={style.chatGPTLabel}>ChatGPT</Text>}
                         {message.role === "user" ? (
-                            <View style={style.userBubble}>
+                            <View style={[style.bubble, style.userBubble]}>
                                 <Text style={style.bubbleText}>
                                     {message.content}
                                 </Text>
@@ -35,7 +41,7 @@ export const ChatBox: React.FC<{ messages: TMessage[] }> = ({ messages }) => {
                                 colors={["rgba(70,40,96,1)", "rgba(48,11,154,1)"]}
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 1 }}
-                                style={[style.aiBubble, style.linearGradient]}
+                                style={[style.bubble, style.linearGradient]}
                             >
                                 <Text style={style.bubbleText}>
                                     {message.content}
@@ -45,6 +51,21 @@ export const ChatBox: React.FC<{ messages: TMessage[] }> = ({ messages }) => {
                     </View>
                 ) : null
             ))}
+            {aiLoadingMessage && (
+                <View style={style.aiBubbleContainer} key="loading">
+                    <Text style={style.chatGPTLabel}>ChatGPT</Text>
+                    <LinearGradient
+                        colors={["rgba(70,40,96,1)", "rgba(48,11,154,1)"]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={[style.bubble, style.linearGradient, style.loadingBubble]}
+                    >
+                        <Text style={style.bubbleText}>
+                            <ActivityIndicator size="small" color="#fff" />
+                        </Text>
+                    </LinearGradient>
+                </View>
+            )}
         </ScrollView>
     );
 }
@@ -54,25 +75,22 @@ const style = StyleSheet.create({
         marginBottom: 15,
         width: '100%',
     },
-    userBubbleContainer: {
-        alignSelf: 'flex-end',
+    bubbleContainer: {
         marginBottom: 8,
-        marginRight: 10,
         maxWidth: '80%',
     },
-    userBubble: {
-        backgroundColor: '#007AFF',
-        borderRadius: 18,
-        paddingHorizontal: 16,
-        paddingVertical: 10,
+    userBubbleContainer: {
+        alignSelf: 'flex-end',
+        marginRight: 10,
     },
     aiBubbleContainer: {
         alignSelf: 'flex-start',
-        marginBottom: 8,
         marginLeft: 10,
-        maxWidth: '80%',
     },
-    aiBubble: {
+    userBubble: {
+        backgroundColor: '#007AFF',
+    },
+    bubble: {
         borderRadius: 18,
         paddingHorizontal: 16,
         paddingVertical: 10,
@@ -94,4 +112,8 @@ const style = StyleSheet.create({
         marginBottom: 2,
         marginLeft: 10,
     },
+    loadingBubble: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
 });
