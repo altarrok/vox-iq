@@ -16,7 +16,7 @@ export default function App() {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "http://192.168.1.22:8000/trpc",
+          url: "http://192.168.1.70:8000/trpc",
         }),
       ],
     }),
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 16,
+    marginVertical: 16,
   },
 });
 

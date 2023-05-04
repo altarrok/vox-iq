@@ -24,6 +24,7 @@ export const ChatWidget: React.FC = () => {
     return (
         <ChatBox
             messages={messages}
+            aiLoadingMessage={chatCompletionMutation.isLoading}
         />
     );
 }
