@@ -116,9 +116,9 @@ export const ChatButton: React.FC = () => {
     <TouchableOpacity>
       <View
         style={
-          // transcribeMutation.isLoading
-          //   ? [styles.dotLoading, styles.center]
-            [styles.dot, styles.center]
+          transcribeMutation.isLoading
+            ? [styles.dotLoading, styles.center]
+            : [styles.dot, styles.center]
         }
       >
         {animate &&
