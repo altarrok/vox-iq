@@ -3,18 +3,16 @@ import { useChatContext } from "./chat/ChatContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useEffect, useState } from "react";
 import { Audio } from "expo-av";
-import {MotiView} from '@motify/components'
-import {Easing} from 'react-native-reanimated'
+import { MotiView } from "@motify/components";
+import { Easing } from "react-native-reanimated";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
-
+import { ActivityIndicator } from "react-native";
 
 export const ChatButton: React.FC = () => {
   const [recording, setRecording] = useState<Audio.Recording>();
   const [recordingStatus, setRecordingStatus] = useState("idle");
   const [audioPermission, setAudioPermission] = useState(false);
   const [animate, setAnimate] = useState(false);
-
-
 
   const { addMessage } = useChatContext();
   const transcribeMutation = trpc.transcribe.transcribe.useMutation({
@@ -73,7 +71,6 @@ export const ChatButton: React.FC = () => {
   async function stopRecording() {
     try {
       if (recordingStatus === "recording") {
-
         await recording!.stopAndUnloadAsync();
 
         const blobToBase64 = (blob: any) => {
@@ -117,57 +114,73 @@ export const ChatButton: React.FC = () => {
 
   return (
     <TouchableOpacity>
-      <View style={[styles.dot, styles.center]}>
-        {animate && [...Array(2).keys()].map((i) => {
-            return (
-                <MotiView
-                from={{opacity:1, scale:1}}
-                animate={{opacity:0, scale:2}}
-                key={i}
-                style={[
-                    StyleSheet.absoluteFillObject,
-                    styles.dot,
-                ]}
-                transition={{
-                    type: "timing",
-                    duration: 2000,
-                    easing: Easing.out(Easing.ease),
-                    loop: true,
-                    delay: i * 500,
-                    repeatReverse: false,
-                }}
-                />
-            );
-            })
+      <View
+        style={
+          transcribeMutation.isLoading
+            ? [styles.dotLoading, styles.center]
+            : [styles.dot, styles.center]
         }
-        <FontAwesome
-          name={recordingStatus === "idle" ? "microphone" : "microphone-slash"}
-          size={45}
-          color="white"
-          onPress={() =>
-            recordingStatus === "idle" ? startRecording() : stopRecording()
-          }
-        >
-          {/* <Text >Talk AMK</Text> */}
-        </FontAwesome>
+      >
+        {animate &&
+          [...Array(2).keys()].map((i) => {
+            return (
+              <MotiView
+                from={{ opacity: 1, scale: 1 }}
+                animate={{ opacity: 0, scale: 2 }}
+                key={i}
+                style={[StyleSheet.absoluteFillObject, styles.dot]}
+                transition={{
+                  type: "timing",
+                  duration: 2000,
+                  easing: Easing.out(Easing.ease),
+                  loop: true,
+                  delay: i * 500,
+                  repeatReverse: false,
+                }}
+              />
+            );
+          })}
+        <View>
+          <FontAwesome
+            name={
+              transcribeMutation.isLoading ? "microphone-slash" : "microphone"
+            }
+            size={45}
+            color="white"
+            onPress={() =>
+              recordingStatus === "idle" ? startRecording() : stopRecording()
+            }
+          ></FontAwesome>
+          {transcribeMutation.isLoading && (
+            <ActivityIndicator
+              size={"large"}
+              style={styles.spinnerContainer}
+            ></ActivityIndicator>
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-    talkButton: {
-        backgroundColor: "red",
-    },
-    dot: {
-        width: 80,
-        height: 80,
-        borderRadius: 80,
-        backgroundColor: "black",
-    },
-    center: {
-        alignItems: "center",
-        justifyContent: "center",
-    }
-
-})
+  spinnerContainer: {
+    position: "absolute",
+  },
+  dot: {
+    width: 80,
+    height: 80,
+    borderRadius: 80,
+    backgroundColor: "black",
+  },
+  dotLoading: {
+    width: 80,
+    height: 80,
+    borderRadius: 80,
+    backgroundColor: "gray",
+  },
+  center: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
