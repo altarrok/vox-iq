@@ -5,15 +5,15 @@ import { TMessage } from "./ChatContext";
 import { ActivityIndicator } from 'react-native';
 import * as Speach from "expo-speech";
 
-export const ChatBox: React.FC<{ messages: TMessage[], aiLoadingMessage: boolean }> = ({ messages, aiLoadingMessage }) => {
+export const ChatBox: React.FC<{ messages: TMessage[], aiLoadingMessage: boolean, shouldSpeak: boolean }> = ({ messages, aiLoadingMessage, shouldSpeak }) => {
     const scrollViewRef = useRef<ScrollView>(null);
     const [isAtBottom, setIsAtBottom] = useState(true);
 
     useEffect(() => {
-        if (messages[messages.length - 1].role === "assistant") {
+        if (messages[messages.length - 1].role === "assistant" && shouldSpeak) {
             Speach.speak(messages[messages.length - 1].content);
         }
-      }, [messages]);
+      }, [messages, shouldSpeak]);
 
     return (
         <ScrollView
