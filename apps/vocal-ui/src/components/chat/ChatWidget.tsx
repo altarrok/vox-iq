@@ -4,7 +4,7 @@ import { trpc } from "../../utils/trpc";
 import { ChatBox } from "./ChatBox";
 
 export const ChatWidget: React.FC = () => {
-    const { messages, addMessage } = useChatContext();
+    const { messages, volume, addMessage } = useChatContext();
     const chatCompletionMutation = trpc.chat.chatCompletion.useMutation({
         onSuccess(data) {
             if (data) {
@@ -25,6 +25,7 @@ export const ChatWidget: React.FC = () => {
         <ChatBox
             messages={messages}
             aiLoadingMessage={chatCompletionMutation.isLoading}
+            shouldSpeak={volume}
         />
     );
 }

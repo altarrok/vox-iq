@@ -1,12 +1,19 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { TMessage } from "./ChatContext";
 import { ActivityIndicator } from 'react-native';
+import * as Speach from "expo-speech";
 
-export const ChatBox: React.FC<{ messages: TMessage[], aiLoadingMessage: boolean }> = ({ messages, aiLoadingMessage }) => {
+export const ChatBox: React.FC<{ messages: TMessage[], aiLoadingMessage: boolean, shouldSpeak: boolean }> = ({ messages, aiLoadingMessage, shouldSpeak }) => {
     const scrollViewRef = useRef<ScrollView>(null);
     const [isAtBottom, setIsAtBottom] = useState(true);
+
+    useEffect(() => {
+        if (messages[messages.length - 1].role === "assistant" && shouldSpeak) {
+            Speach.speak(messages[messages.length - 1].content);
+        }
+      }, [messages, shouldSpeak]);
 
     return (
         <ScrollView
@@ -117,3 +124,6 @@ const style = StyleSheet.create({
         justifyContent: 'center',
     }
 });
+
+
+

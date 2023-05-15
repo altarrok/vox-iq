@@ -13,8 +13,9 @@ export const ChatButton: React.FC = () => {
   const [recordingStatus, setRecordingStatus] = useState("idle");
   const [audioPermission, setAudioPermission] = useState(false);
   const [animate, setAnimate] = useState(false);
+  const [volume, changeVolume] = useState(true);
 
-  const { addMessage } = useChatContext();
+  const { addMessage, setVolume } = useChatContext();
   const transcribeMutation = trpc.transcribe.transcribe.useMutation({
     onSuccess(data) {
       if (data) {
@@ -25,6 +26,10 @@ export const ChatButton: React.FC = () => {
       }
     },
   });
+
+  useEffect(() => {
+    setVolume(volume);
+  }, [volume]);
 
   useEffect(() => {
     async function getAudioPermission() {
@@ -114,49 +119,59 @@ export const ChatButton: React.FC = () => {
 
   return (
     <TouchableOpacity>
-      <View
-        style={
-          transcribeMutation.isLoading
-            ? [styles.dotLoading, styles.center]
-            : [styles.dot, styles.center]
-        }
-      >
-        {animate &&
-          [...Array(2).keys()].map((i) => {
-            return (
-              <MotiView
-                from={{ opacity: 1, scale: 1 }}
-                animate={{ opacity: 0, scale: 2 }}
-                key={i}
-                style={[StyleSheet.absoluteFillObject, styles.dot]}
-                transition={{
-                  type: "timing",
-                  duration: 2000,
-                  easing: Easing.out(Easing.ease),
-                  loop: true,
-                  delay: i * 500,
-                  repeatReverse: false,
-                }}
-              />
-            );
-          })}
+      <View style={styles.lol}>
+        <View
+          style={
+            transcribeMutation.isLoading
+              ? [styles.dotLoading, styles.center]
+              : [styles.dot, styles.center]
+          }
+        >
+          {animate &&
+            [...Array(2).keys()].map((i) => {
+              return (
+                <MotiView
+                  from={{ opacity: 1, scale: 1 }}
+                  animate={{ opacity: 0, scale: 2 }}
+                  key={i}
+                  style={[StyleSheet.absoluteFillObject, styles.dot]}
+                  transition={{
+                    type: "timing",
+                    duration: 2000,
+                    easing: Easing.out(Easing.ease),
+                    loop: true,
+                    delay: i * 500,
+                    repeatReverse: false,
+                  }}
+                />
+              );
+            })}
+          <View>
+            <FontAwesome
+              name={
+                transcribeMutation.isLoading ? "microphone-slash" : "microphone"
+              }
+              size={45}
+              color="white"
+              onPress={() =>
+                recordingStatus === "idle" ? startRecording() : stopRecording()
+              }
+            ></FontAwesome>
+            {transcribeMutation.isLoading && (
+              <ActivityIndicator
+                size={"large"}
+                style={styles.spinnerContainer}
+              ></ActivityIndicator>
+            )}
+          </View>
+        </View>
         <View>
           <FontAwesome
-            name={
-              transcribeMutation.isLoading ? "microphone-slash" : "microphone"
-            }
-            size={45}
-            color="white"
-            onPress={() =>
-              recordingStatus === "idle" ? startRecording() : stopRecording()
-            }
-          ></FontAwesome>
-          {transcribeMutation.isLoading && (
-            <ActivityIndicator
-              size={"large"}
-              style={styles.spinnerContainer}
-            ></ActivityIndicator>
-          )}
+            size={64}
+            name={volume ? "volume-up" : "volume-off"}
+            onPress={() => changeVolume(!volume)}
+            style={styles.cmon}
+          />
         </View>
       </View>
     </TouchableOpacity>
@@ -166,6 +181,15 @@ export const ChatButton: React.FC = () => {
 const styles = StyleSheet.create({
   spinnerContainer: {
     position: "absolute",
+  },
+  cmon: {
+    position: "absolute",
+    marginLeft: 60,
+  },
+  lol: {
+    display: "flex",
+    flexDirection: "row",
+    alignContent: "space-between",
   },
   dot: {
     width: 80,
