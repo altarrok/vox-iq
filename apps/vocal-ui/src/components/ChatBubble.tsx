@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { responsiveFontSize } from '../utils/responsiveFontSize';
 import { LoadingIndicator } from './LoadingIndicator';
+import { ThreeDotLoadingIndicator } from './ThreeDotLoadingIndicator';
 
 interface Props {
     message: string;
@@ -11,12 +12,13 @@ interface Props {
 export const ChatBubble: React.FC<Props> = ({ message, isUser }) => {
     const bubbleStyle = isUser ? styles.userBubble : styles.aiBubble;
     const bubbleContainerStyle = isUser ? styles.userBubbleContainer : styles.aiBubbleContainer;
+    const bubbleTextStyle = isUser ? styles.userBubbleText : styles.aiBubbleText;
 
     return (
         <View style={bubbleContainerStyle}>
             <View style={bubbleStyle}>
                 {!isUser && <Text style={styles.chatGPTLabel}>ChatGPT</Text>}
-                <Text style={styles.bubbleText}>{message}</Text>
+                <Text style={bubbleTextStyle}>{message}</Text>
             </View>
         </View>
     );
@@ -25,7 +27,7 @@ export const ChatBubble: React.FC<Props> = ({ message, isUser }) => {
 export const LoadingChatBubble: React.FC = () => {
     return (
         <View style={[styles.aiBubbleContainer, styles.aiBubble, styles.loadingBubble]}>
-            <LoadingIndicator />
+            <ThreeDotLoadingIndicator />
         </View>
     )
 }
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
         maxWidth: '75%',
     },
     userBubble: {
-        backgroundColor: '#ECECEC',
+        backgroundColor: '#CBFF97',
         borderTopLeftRadius: responsiveFontSize(8),
         borderTopRightRadius: responsiveFontSize(8),
         borderBottomLeftRadius: responsiveFontSize(8),
@@ -55,7 +57,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: responsiveFontSize(4),
         paddingVertical: responsiveFontSize(4),
     },
-    bubbleText: {
+    userBubbleText: {
+        fontFamily: "jost-400",
+        color: '#1B1B1B',
+        textAlign: 'left',
+        fontSize: responsiveFontSize(4),
+        lineHeight: responsiveFontSize(4) * 1.5
+    },
+    aiBubbleText: {
         fontFamily: "jost-300",
         color: '#1B1B1B',
         textAlign: 'left',
@@ -64,8 +73,8 @@ const styles = StyleSheet.create({
     },
     loadingBubble: {
         backgroundColor: '#444444',
-        width: responsiveFontSize(20),
-        height: responsiveFontSize(20),
+        width: responsiveFontSize(18),
+        height: responsiveFontSize(3),
     },
     chatGPTLabel: {
         fontFamily: "jost-600",

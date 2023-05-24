@@ -164,7 +164,7 @@ export const ChatButton: React.FC = () => {
         </View>
         <View>
           <FontAwesome
-            size={responsiveFontSize(15)}
+            size={responsiveFontSize(10)}
             name={volume ? "volume-up" : "volume-off"}
             onPress={() => setVolume(!volume)}
             style={styles.cmon}
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   cmon: {
     position: "absolute",
     marginLeft: responsiveFontSize(10),
-    marginTop: responsiveFontSize(2.5),
+    marginTop: responsiveFontSize(5),
   },
   lol: {
     display: "flex",
