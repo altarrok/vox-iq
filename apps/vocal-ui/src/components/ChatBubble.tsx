@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { responsiveFontSize } from '../utils/responsiveFontSize';
+import { LoadingIndicator } from './LoadingIndicator';
 
 interface Props {
     message: string;
@@ -19,6 +20,14 @@ export const ChatBubble: React.FC<Props> = ({ message, isUser }) => {
             </View>
         </View>
     );
+}
+
+export const LoadingChatBubble: React.FC = () => {
+    return (
+        <View style={[styles.aiBubbleContainer, styles.aiBubble, styles.loadingBubble]}>
+            <LoadingIndicator />
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -52,6 +61,11 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontSize: responsiveFontSize(4),
         lineHeight: responsiveFontSize(4) * 1.5
+    },
+    loadingBubble: {
+        backgroundColor: '#444444',
+        width: responsiveFontSize(20),
+        height: responsiveFontSize(20),
     },
     chatGPTLabel: {
         fontFamily: "jost-600",

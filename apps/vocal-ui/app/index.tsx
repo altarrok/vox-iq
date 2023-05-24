@@ -72,6 +72,6 @@ const styles = StyleSheet.create({
         marginBottom: responsiveFontSize(8)
     },
     startButtonContainer: {
-        width: "80%"
+        width: "85%"
     },
 });

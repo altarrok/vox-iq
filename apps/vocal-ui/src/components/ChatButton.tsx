@@ -5,17 +5,19 @@ import { useEffect, useState } from "react";
 import { Audio } from "expo-av";
 import { MotiView } from "@motify/components";
 import { Easing } from "react-native-reanimated";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
-import { ActivityIndicator } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { MicrophoneEnabledLogo } from "./MicrophoneEnabledLogo";
+import { MicrophoneDisabledLogo } from "./MicrophoneDisabledLogo";
+import { LoadingIndicator } from "./LoadingIndicator";
+import { responsiveFontSize } from "../utils/responsiveFontSize";
 
 export const ChatButton: React.FC = () => {
   const [recording, setRecording] = useState<Audio.Recording>();
-  const [recordingStatus, setRecordingStatus] = useState("idle");
+  const [recordingStatus, setRecordingStatus] = useState<"idle" | "recording">("idle");
   const [audioPermission, setAudioPermission] = useState(false);
   const [animate, setAnimate] = useState(false);
-  const [volume, changeVolume] = useState(true);
 
-  const { addMessage, setVolume } = useChatContext();
+  const { addMessage, volume, setVolume } = useChatContext();
   const transcribeMutation = trpc.transcribe.transcribe.useMutation({
     onSuccess(data) {
       if (data) {
@@ -26,10 +28,6 @@ export const ChatButton: React.FC = () => {
       }
     },
   });
-
-  useEffect(() => {
-    setVolume(volume);
-  }, [volume]);
 
   useEffect(() => {
     async function getAudioPermission() {
@@ -122,7 +120,7 @@ export const ChatButton: React.FC = () => {
       <View style={styles.lol}>
         <View
           style={
-            transcribeMutation.isLoading
+            transcribeMutation.isLoading || recordingStatus === "recording"
               ? [styles.dotLoading, styles.center]
               : [styles.dot, styles.center]
           }
@@ -134,7 +132,7 @@ export const ChatButton: React.FC = () => {
                   from={{ opacity: 1, scale: 1 }}
                   animate={{ opacity: 0, scale: 2 }}
                   key={i}
-                  style={[StyleSheet.absoluteFillObject, styles.dot]}
+                  style={[StyleSheet.absoluteFillObject, styles.dotLoading]}
                   transition={{
                     type: "timing",
                     duration: 2000,
@@ -147,30 +145,30 @@ export const ChatButton: React.FC = () => {
               );
             })}
           <View>
-            <FontAwesome
-              name={
-                transcribeMutation.isLoading ? "microphone-slash" : "microphone"
+            <TouchableOpacity
+              onPress={() => recordingStatus === "idle" ? startRecording() : stopRecording()}
+            >
+              {
+                transcribeMutation.isLoading ? (
+                  <LoadingIndicator />
+                ) : (
+                  recordingStatus === "recording" ? (
+                    <MicrophoneDisabledLogo />
+                  ) : (
+                    <MicrophoneEnabledLogo />
+                  )
+                )
               }
-              size={45}
-              color="white"
-              onPress={() =>
-                recordingStatus === "idle" ? startRecording() : stopRecording()
-              }
-            ></FontAwesome>
-            {transcribeMutation.isLoading && (
-              <ActivityIndicator
-                size={"large"}
-                style={styles.spinnerContainer}
-              ></ActivityIndicator>
-            )}
+            </TouchableOpacity>
           </View>
         </View>
         <View>
           <FontAwesome
-            size={64}
+            size={responsiveFontSize(15)}
             name={volume ? "volume-up" : "volume-off"}
-            onPress={() => changeVolume(!volume)}
+            onPress={() => setVolume(!volume)}
             style={styles.cmon}
+            color={"#CBFF97"}
           />
         </View>
       </View>
@@ -179,12 +177,10 @@ export const ChatButton: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  spinnerContainer: {
-    position: "absolute",
-  },
   cmon: {
     position: "absolute",
-    marginLeft: 60,
+    marginLeft: responsiveFontSize(10),
+    marginTop: responsiveFontSize(2.5),
   },
   lol: {
     display: "flex",
@@ -192,16 +188,16 @@ const styles = StyleSheet.create({
     alignContent: "space-between",
   },
   dot: {
-    width: 80,
-    height: 80,
-    borderRadius: 80,
-    backgroundColor: "black",
+    width: responsiveFontSize(20),
+    height: responsiveFontSize(20),
+    borderRadius: responsiveFontSize(20),
+    backgroundColor: "#CBFF97",
   },
   dotLoading: {
-    width: 80,
-    height: 80,
-    borderRadius: 80,
-    backgroundColor: "gray",
+    width: responsiveFontSize(20),
+    height: responsiveFontSize(20),
+    borderRadius: responsiveFontSize(20),
+    backgroundColor: "#444444",
   },
   center: {
     alignItems: "center",

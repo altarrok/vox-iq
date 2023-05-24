@@ -8,6 +8,7 @@ import { trpc } from '../src/utils/trpc';
 import { ChatContextProvider } from '../src/components/chat/ChatContext';
 import { ChatWidget } from '../src/components/chat/ChatWidget';
 import { ChatButton } from '../src/components/ChatButton';
+import { ChatTitleLogo } from '../src/components/ChatTitleLogo';
 
 
 export default function Chat() {
@@ -31,6 +32,7 @@ export default function Chat() {
                     <SafeAreaView style={[styles.container, { paddingTop: statusBarHeight }]}>
                         <View style={styles.innerContainer}>
                             <StatusBar style="light" translucent backgroundColor="transparent" />
+                            <ChatTitleLogo />
                             <ChatWidget />
                             <ChatButton />
                         </View>
@@ -44,7 +46,7 @@ export default function Chat() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#2e2e2e',
+        backgroundColor: '#1B1B1B',
     },
     innerContainer: {
         flex: 1,
