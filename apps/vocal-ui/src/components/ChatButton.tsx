@@ -117,7 +117,7 @@ export const ChatButton: React.FC = () => {
 
   return (
     <TouchableOpacity>
-      <View style={styles.lol}>
+      <View style={styles.chatBoxContainer}>
         <View
           style={
             transcribeMutation.isLoading || recordingStatus === "recording"
@@ -167,7 +167,7 @@ export const ChatButton: React.FC = () => {
             size={responsiveFontSize(10)}
             name={volume ? "volume-up" : "volume-off"}
             onPress={() => setVolume(!volume)}
-            style={styles.cmon}
+            style={styles.volume}
             color={"#CBFF97"}
           />
         </View>
@@ -177,12 +177,12 @@ export const ChatButton: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  cmon: {
+  volume: {
     position: "absolute",
     marginLeft: responsiveFontSize(10),
     marginTop: responsiveFontSize(5),
   },
-  lol: {
+  chatBoxContainer: {
     display: "flex",
     flexDirection: "row",
     alignContent: "space-between",
