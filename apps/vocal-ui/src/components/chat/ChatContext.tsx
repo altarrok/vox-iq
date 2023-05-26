@@ -14,7 +14,7 @@ const defaultContextState: IChatContext = {
     messages: [
         {
             role: "system",
-            content: "You are a voice assistant. Use short and precise answers. Max 100 tokens per answer."
+            content: "You are a voice assistant. Use short and precise answers. Max 1000 tokens per answer."
         }
     ],
     volume: true,
