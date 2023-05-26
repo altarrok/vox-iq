@@ -17,7 +17,7 @@ export default function Chat() {
         trpc.createClient({
             links: [
                 httpBatchLink({
-                    url: "http://192.168.1.70:8000/trpc",
+                    url: "http://192.168.1.22:8000/trpc",
                 }),
             ],
         }),
@@ -30,7 +30,7 @@ export default function Chat() {
             <QueryClientProvider client={queryClient}>
                 <ChatContextProvider>
                     <SafeAreaView style={[styles.container, { paddingTop: statusBarHeight }]}>
-                        <View style={styles.innerContainer}>
+                        <View style={Platform.OS === 'android' ? styles.innerContainerAndroid : styles.innerContainer}>
                             <StatusBar style="light" translucent backgroundColor="transparent" />
                             <ChatTitleLogo />
                             <ChatWidget />
@@ -49,6 +49,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#1B1B1B',
     },
     innerContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    innerContainerAndroid: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
